@@ -1,0 +1,40 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #222;
+  height: 85px;
+  padding: 20px;
+  color: white;
+}
+
+.sign-in {
+  display: flex;
+  left: 10px;
+  position: absolute;
+}
+
+.form-signup{
+ text-align: center;
+ margin: auto;
+ padding: 10px;
+}
+
+.form-signup input{
+  margin-bottom: 10px; 
+}
+
+.sign-in input, button{
+  margin-right: 5px;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  font-size: large;
+  margin-top: 25px;
+}
+
