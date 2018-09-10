@@ -2,10 +2,10 @@ let CQLConnection
 const crypto = require('crypto')
 
 //Inserts a new user into the database users tables. Random 16 Bytes are stored as salt for the password. 
-function insertNewUser(username, password, callback){
+function insertNewUser(email, password, firstname, lastname, callback){
     var salt = crypto.randomBytes(16).toString('hex')
     
-    const insertUserQuery = `INSERT INTO users(username, password, salt) VALUES ('${username}', '${setPassword(password,salt)}','${salt}');`
+    const insertUserQuery = `INSERT INTO users(email, password, salt, firstname, lastname) VALUES ('${email}', '${setPassword(password,salt)}','${salt}','${firstname}','${lastname}');`
 
     CQLConnection.execQuery(insertUserQuery, callback)
 }
@@ -13,11 +13,11 @@ function insertNewUser(username, password, callback){
 //Get the information user credentials. The salt for the password is gathered then hashed to see if matching
 function getUser(username, password, callback){
     
-    CQLConnection.execQuery(`SELECT salt FROM users WHERE username = '${username}';`, (result) => {
+    CQLConnection.execQuery(`SELECT salt FROM users WHERE email = '${username}';`, (result) => {
 
         const salt = result.result[0].salt
 
-        const getUserQuery = `SELECT * FROM users WHERE username = '${username}' AND password = '${setPassword(password,salt)}';`
+        const getUserQuery = `SELECT * FROM users WHERE email = '${username}' AND password = '${setPassword(password,salt)}';`
 
         CQLConnection.execQuery(getUserQuery, (userResult) => {
             if(userResult.error) throw error
@@ -33,7 +33,7 @@ function getUser(username, password, callback){
 //Checks to see if user exists returns false in a callback if the resuktSet is longer than 0 entries. 
 function checkUserExist(username, callback){
 
-    const userExistQuery = `SELECT * FROM users WHERE username = '${username}';`
+    const userExistQuery = `SELECT * FROM users WHERE email = '${username}';`
 
     CQLConnection.execQuery(userExistQuery, (userResult) => {
         const doesUserExist = userResult.result !== null && userResult.result.length > 0 ? true : false

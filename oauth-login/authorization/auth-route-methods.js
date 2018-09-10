@@ -12,9 +12,8 @@ let dbHelper
  */
 function registerUser(req, res){
     //this method might need to change depeding on the application
-    
     //dbHelper.checkUserExist(req.body.username, (error, checkUserExist) => {
-
+        console.log("body: ", req.body)
         // //could be a sql problem or extant user
         // if(error !== null || checkUserExist){
 
@@ -28,12 +27,20 @@ function registerUser(req, res){
 
         //     return
         // }
-        const doTheyExist = userExists(req.body.username)
+        const doTheyExist = userExists(req.body.email)
         if(!doTheyExist){
 
+            const password = req.body.password
+            const firstname = req.body.firstname
+            const lastname = req.body.lastname
+            const email = req.body.email
+
+            
             //Nothing errored out so we can register the new user
-            dbHelper.insertNewUser(req.body.username, req.body.password, (result) => {
+            dbHelper.insertNewUser(email, password, firstname, lastname, (result) => {
                 const message = result.error === null ? "registration successful" : "registration fialed"
+
+                console.log(message)
 
                 sendResponse(res, message, result.error)
             })
@@ -41,6 +48,7 @@ function registerUser(req, res){
         }else if(doTheyExist instanceof Error){
             sendResponse(res, doTheyExist, error)
         }else{
+            console.log("user already exists")
             sendResponse(res, "sorry that user already exists", error)
         }
 
@@ -51,7 +59,7 @@ function registerUser(req, res){
 //This really depends on the aplication
 function login(req, res){
 
-    const doTheyExist = userExists(req.body.username)
+    const doTheyExist = userExists(req.body.email)
     if(doTheyExist){
         dbHelper.getUser(req.body.username, req.body.password, (doMore, user) => {
             if(user instanceof Error) throw err
@@ -67,11 +75,11 @@ function login(req, res){
     }
 }
 
-function userExists(username){
+function userExists(email){
 
     let doThey
 
-    dbHelper.checkUserExist(username, (error, checkUserExist) => {
+    dbHelper.checkUserExist(email, (error, checkUserExist) => {
         //there was an error
         if(error !== null){
             throw error

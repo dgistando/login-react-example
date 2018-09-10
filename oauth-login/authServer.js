@@ -52,6 +52,15 @@ passport.deserializeUser((id, done) => {
     done(null, id)
 })
 
+const path = require('path')
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '/oauth-login/public/', 'index.html'))
+})
+
+app.get('/bundle.js', (req, res) => {
+    res.sendFile(path.join(__dirname, '/oauth-login/', 'bundle.js' ))
+})
+
 app.listen(port, () => {
    console.log(`listening on port ${port}...`)
 })

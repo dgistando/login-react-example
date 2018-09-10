@@ -1,7 +1,9 @@
 const uglify = require('uglifyjs-webpack-plugin')
+const MinifyPlugin = require("babel-minify-webpack-plugin")
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
 
 module.exports = {
-    mode : 'production',
+    mode : 'development',
     entry: ['babel-polyfill','./src/index.js'],
     output: {
         path: __dirname,
@@ -28,7 +30,6 @@ module.exports = {
         ]
       },
     plugins : [//handles code post download 
-        new uglify()
     ],
     resolve: {
       extensions: ['.js', '.jsx']
