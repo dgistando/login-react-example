@@ -31,9 +31,9 @@ function getUser(username, password, callback){
 }
 
 //Checks to see if user exists returns false in a callback if the resuktSet is longer than 0 entries. 
-function checkUserExist(username, callback){
+function checkUserExist(email, callback){
 
-    const userExistQuery = `SELECT * FROM users WHERE email = '${username}';`
+    const userExistQuery = `SELECT * FROM users WHERE email = '${email}';`
 
     CQLConnection.execQuery(userExistQuery, (userResult) => {
         const doesUserExist = userResult.result !== null && userResult.result.length > 0 ? true : false
