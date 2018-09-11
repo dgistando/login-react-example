@@ -1,9 +1,23 @@
 import React, { Component } from 'react';
 
+import { withRouter} from 'react-router-dom'
+
 import SignUp from '../containers/sign-up';
 import SignIn from '../containers/sign-in';
 
-export default class RegisterHome extends Component {
+class RegisterHome extends Component {
+
+    constructor(props){
+        super(props);
+
+        fetch('/checkAuth', {})
+        .then(res => res.json())
+        .then(data => {
+            if(data.isAuthenticated)
+                this.props.history.push('/profile')
+        })
+        .catch(err => console.log(err))
+    }
 
     render() {
       return (
@@ -17,3 +31,5 @@ export default class RegisterHome extends Component {
         );
     }
 }
+
+export default withRouter(RegisterHome)

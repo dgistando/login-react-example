@@ -19,12 +19,20 @@ export default class SignUp extends Component {
         _fetch('auth/login',{
             email : this.state.siEmail,
             password : this.state.siPassword
-        }).then(res => {
-            console.log(res.json())
+        }).then(res => res.json())
+        .then(data => {
+            if(data.isAuthenticated){
+                this.props.history.push('/profile')
+            }else{
+                this.setState({
+                    failed : true
+                })
+            }
         }).catch(err => {
             console.log(err)
         })
     }
+    
 
     handleChange(event){
         event.preventDefault()

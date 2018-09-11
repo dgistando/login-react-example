@@ -46,6 +46,7 @@ const cassandra = require('cassandra-driver')
         client = connect(username, password, contactPoints, options)
 
         return {
+            client : client,
             execQuery : execQuery
         }
     }

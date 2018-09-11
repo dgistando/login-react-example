@@ -6,6 +6,7 @@ export default function _fetch(path, json){
         mode : "cors",
         cache : "no-cache",
         credentials : "same-origin",
+       // redirect: 'follow',
         headers : {
             'Content-Type' : 'application/json'
         },

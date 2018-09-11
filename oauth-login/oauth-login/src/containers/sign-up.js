@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
 import '../App.css'
 
+import { withRouter} from 'react-router-dom'
+
 import _fetch from '../lib/fetchWrapper'
 
-export default class SignUp extends Component {
+class SignUp extends Component {
     constructor(props){
         super(props);
 
@@ -12,25 +14,42 @@ export default class SignUp extends Component {
             sulastName : '',
             suemail : '',
             supassword : '',
-            suconfirmPassword : ''
+            suconfirmPassword : '',
+            failed : false
         }
 
         this.onFormSubmit = this.onFormSubmit.bind(this)
-        this.handleChange = this.handleChange.bind(this)
+        this.handleChange = this.handleChange.bind(this) 
     }
 
     checkFormData(){
         //return a boolean of whether or not the total checks of all the data is true or false.
+        let firstName = this.state.firstName.length > 0
+        let lastName = this.state.lastName.length > 0
+        let email = this.state.email
+        let password = this.state.password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.* )(?=.*[^a-zA-Z0-9]).{8,}$/, "i") === null ? false : true;
+
+        return (firstName && lastName && email && password)
     }
 
-    onFormSubmit(){        
+    onFormSubmit(event){ 
+        event.preventDefault();
+        
+
         _fetch('auth/register',{
                 firstName : this.state.sufirstName,
                 lastName : this.state.sulastName,
                 email : this.state.suemail,
                 password : this.state.supassword
-        }).then(res => {
-            console.log(res.json())
+        }).then(res => res.json())
+        .then(data => {
+            if(data.isAuthenticated){
+                this.props.history.push('/profile')
+            }else{
+                this.setState({
+                    failed : true
+                })
+            }
         }).catch(err => {
             console.log(err)
         })
@@ -44,11 +63,19 @@ export default class SignUp extends Component {
     }
 
     render(){
+
+        let message
+        if(this.state.failed){
+            message = <p><span className="alert alert-info">An error occurred</span> Please Try again later</p>
+        }else{
+            message = <p>Hello! Please Sign up</p>
+        }
+
         return(
             <div>
-                <p className="App-intro">
-                    Hello! Please Sign up
-                </p>
+                <div className="App-intro">
+                    {message}
+                </div>
 
                 <form className="form-signup col-md-5 order-md-1" onSubmit={this.onFormSubmit}>
 
@@ -76,3 +103,5 @@ export default class SignUp extends Component {
         );
     }
 }
+
+export default withRouter(SignUp)
